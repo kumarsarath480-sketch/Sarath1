@@ -1,0 +1,1000 @@
+```html
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IsaiPulse Hi-Res Tamil Lossless Launcher</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            400: '#38bdf8',
+                            500: '#06b6d4',
+                            600: '#0284c7',
+                            900: '#0f172a',
+                            gold: '#fbbf24',
+                            accent: '#f43f5e'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'spin-slow': 'spin 20s linear infinite',
+                        'pulse-glow': 'pulseGlow 2s infinite alternate',
+                    },
+                    keyframes: {
+                        pulseGlow: {
+                            '0%': { boxShadow: '0 0 15px rgba(56, 189, 248, 0.2)' },
+                            '100%': { boxShadow: '0 0 35px rgba(56, 189, 248, 0.6)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #090d16;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.5);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(56, 189, 248, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(56, 189, 248, 0.6);
+        }
+
+        /* Vinyl Spin animation pause toggle */
+        .paused {
+            animation-play-state: paused !important;
+        }
+
+        /* Range Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 14px;
+            width: 14px;
+            border-radius: 50%;
+            background: #38bdf8;
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -4px;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+            transition: transform 0.1s ease, background-color 0.1s ease;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #7dd3fc;
+        }
+
+        /* Vertical range slider for EQ */
+        .eq-slider {
+            writing-mode: bt-linear; /* IE/Edge */
+            -webkit-appearance: slider-vertical; /* WebKit */
+            width: 8px;
+            height: 140px;
+            padding: 0 5px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-400 selection:text-slate-900">
+
+    <!-- Ambient Background Glows -->
+    <div class="fixed top-0 left-1/4 w-96 h-96 bg-brand-600/20 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+    <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-brand-accent/15 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+
+    <!-- Header Navigation -->
+    <header class="w-full glass-panel sticky top-0 z-40 px-4 lg:px-8 py-3 flex items-center justify-between border-b border-white/10">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-400 flex items-center justify-center shadow-lg shadow-brand-500/20">
+                <i data-lucide="disc-3" class="w-6 h-6 text-slate-900 animate-spin-slow"></i>
+            </div>
+            <div>
+                <h1 class="font-extrabold text-lg lg:text-xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-brand-400 bg-clip-text text-transparent">
+                    IsaiPulse <span class="text-xs px-2 py-0.5 rounded bg-brand-400/10 text-brand-400 border border-brand-400/30 font-semibold tracking-wider uppercase ml-1">Hi-Res FLAC</span>
+                </h1>
+                <p class="text-xs text-slate-400 hidden sm:block">Bit-Perfect Tamil Lossless Streaming & Audio Engine</p>
+            </div>
+        </div>
+
+        <!-- Action Tools -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+            <!-- Local File Upload Button -->
+            <label for="localFileInput" class="cursor-pointer flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-xs sm:text-sm font-medium border border-white/10 text-slate-200 transition-all">
+                <i data-lucide="folder-plus" class="w-4 h-4 text-brand-400"></i>
+                <span class="hidden md:inline">Open FLAC/WAV</span>
+                <input type="file" id="localFileInput" accept="audio/*,.flac,.wav,.m4a,.mp3" class="hidden" multiple>
+            </label>
+
+            <!-- EQ Toggle Modal Button -->
+            <button id="btnOpenEQ" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-xs sm:text-sm font-medium border border-white/10 text-slate-200 transition-all">
+                <i data-lucide="sliders" class="w-4 h-4 text-brand-gold"></i>
+                <span class="hidden md:inline">Equalizer</span>
+            </button>
+
+            <!-- Bit-Perfect Setup Guide Modal Button -->
+            <button id="btnOpenSetup" class="p-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-white/10 transition-all" title="Bit-Perfect Audio Setup Guide">
+                <i data-lucide="settings-2" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 flex-grow">
+        
+        <!-- Left Section: Visualizer & Player Hub (7 cols on large screens) -->
+        <section class="lg:col-span-7 flex flex-col space-y-6">
+            
+            <!-- Vinyl & Visualizer Stage Card -->
+            <div class="glass-panel rounded-2xl p-6 flex flex-col items-center justify-between relative overflow-hidden shadow-2xl min-h-[380px]">
+                
+                <!-- Audio Specs & Stream Quality Badge Header -->
+                <div class="w-full flex justify-between items-center z-10">
+                    <div class="flex items-center space-x-2">
+                        <span id="badgeFormat" class="px-2.5 py-1 rounded-md bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs font-bold tracking-wider uppercase">
+                            24-BIT / 96kHz FLAC
+                        </span>
+                        <span id="badgeChannel" class="px-2 py-1 rounded-md bg-slate-800 text-slate-300 text-xs font-mono border border-white/5">
+                            STEREO 2.0
+                        </span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-xs font-mono text-brand-400 bg-brand-900/60 px-3 py-1 rounded-full border border-brand-500/20">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span id="audioEngineStatus">DSP ACTIVE</span>
+                    </div>
+                </div>
+
+                <!-- Central Spinning Vinyl & Art Showcase -->
+                <div class="relative my-6 flex items-center justify-center">
+                    <!-- Vinyl Record Disk Effect -->
+                    <div id="vinylDisk" class="w-48 h-48 sm:w-56 sm:h-56 rounded-full bg-slate-950 border-4 border-slate-800 shadow-2xl flex items-center justify-center animate-spin-slow paused transition-all duration-700 relative">
+                        <!-- Vinyl Grooves -->
+                        <div class="absolute inset-2 rounded-full border border-white/5"></div>
+                        <div class="absolute inset-6 rounded-full border border-white/5"></div>
+                        <div class="absolute inset-10 rounded-full border border-white/5"></div>
+                        <div class="absolute inset-14 rounded-full border border-white/5"></div>
+                        <!-- Vinyl Center Art -->
+                        <img id="trackCover" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80" alt="Album Art" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-slate-900 shadow-inner">
+                        <div class="w-5 h-5 rounded-full bg-slate-900 border-2 border-slate-700 absolute"></div>
+                    </div>
+                </div>
+
+                <!-- Real-time Frequency Spectrum Visualizer Canvas -->
+                <div class="w-full relative h-24 rounded-xl overflow-hidden bg-slate-950/60 border border-white/5">
+                    <canvas id="visualizerCanvas" class="w-full h-full block"></canvas>
+                    <div class="absolute bottom-1 left-3 text-[10px] font-mono text-slate-500 uppercase tracking-widest pointer-events-none">
+                        Real-time Spectrum Analyzer (Web Audio API)
+                    </div>
+                </div>
+
+                <!-- Track Metadata Banner -->
+                <div class="w-full text-center mt-4 z-10">
+                    <h2 id="trackTitle" class="text-xl sm:text-2xl font-bold text-white tracking-tight truncate">
+                        Select a Hi-Res Track
+                    </h2>
+                    <p id="trackArtist" class="text-sm text-slate-400 font-medium truncate mt-0.5">
+                        Tamil Lossless Master Collection
+                    </p>
+                    <p id="trackAlbum" class="text-xs text-brand-400/80 font-mono mt-1">
+                        Album Info
+                    </p>
+                </div>
+            </div>
+
+            <!-- Player Control Bar -->
+            <div class="glass-panel rounded-2xl p-5 space-y-4 shadow-xl">
+                
+                <!-- Seek Bar with Timers -->
+                <div class="space-y-1">
+                    <div class="flex justify-between text-xs font-mono text-slate-400">
+                        <span id="currentTime">00:00</span>
+                        <span id="durationTime">00:00</span>
+                    </div>
+                    <input type="range" id="seekBar" min="0" max="100" value="0" class="w-full">
+                </div>
+
+                <!-- Main Buttons Grid -->
+                <div class="flex items-center justify-between pt-1">
+                    
+                    <!-- Left Secondary Controls (Shuffle / Repeat) -->
+                    <div class="flex items-center space-x-1 sm:space-x-2">
+                        <button id="btnShuffle" class="p-2.5 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition-all" title="Toggle Shuffle">
+                            <i data-lucide="shuffle" class="w-4 h-4"></i>
+                        </button>
+                        <button id="btnRepeat" class="p-2.5 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition-all" title="Toggle Repeat">
+                            <i data-lucide="repeat" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <!-- Main Transport Controls -->
+                    <div class="flex items-center space-x-3 sm:space-x-4">
+                        <button id="btnPrev" class="p-3 rounded-full hover:bg-slate-800 text-slate-200 hover:text-brand-400 transition-all active:scale-95" title="Previous Track">
+                            <i data-lucide="skip-back" class="w-5 h-5 fill-current"></i>
+                        </button>
+
+                        <button id="btnPlay" class="w-14 h-14 rounded-full bg-gradient-to-tr from-brand-600 to-brand-400 hover:from-brand-500 hover:to-sky-300 text-slate-950 flex items-center justify-center shadow-lg shadow-brand-500/30 transition-all hover:scale-105 active:scale-95" title="Play/Pause">
+                            <i data-lucide="play" id="playIcon" class="w-6 h-6 fill-current ml-0.5"></i>
+                        </button>
+
+                        <button id="btnNext" class="p-3 rounded-full hover:bg-slate-800 text-slate-200 hover:text-brand-400 transition-all active:scale-95" title="Next Track">
+                            <i data-lucide="skip-forward" class="w-5 h-5 fill-current"></i>
+                        </button>
+                    </div>
+
+                    <!-- Volume Control Block -->
+                    <div class="flex items-center space-x-2 group relative">
+                        <button id="btnMute" class="p-2 rounded-full hover:bg-slate-800 text-slate-400 hover:text-white transition-all">
+                            <i data-lucide="volume-2" id="volumeIcon" class="w-4 h-4"></i>
+                        </button>
+                        <input type="range" id="volumeBar" min="0" max="1" step="0.01" value="0.8" class="w-16 sm:w-20">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Section: Interactive Tamil Hi-Res Playlist & Browser (5 cols) -->
+        <section class="lg:col-span-5 flex flex-col space-y-4">
+            
+            <div class="glass-panel rounded-2xl p-5 flex flex-col h-full min-h-[500px] shadow-xl">
+                
+                <!-- Playlist Header & Category Filters -->
+                <div class="space-y-3 pb-4 border-b border-white/10">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-bold text-lg text-white flex items-center space-x-2">
+                            <i data-lucide="list-music" class="w-5 h-5 text-brand-400"></i>
+                            <span>Lossless Catalogue</span>
+                        </h3>
+                        <span id="trackCountBadge" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-800 text-slate-400 border border-white/5 font-mono">0 tracks</span>
+                    </div>
+
+                    <!-- Search Input Box -->
+                    <div class="relative">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3 top-3 text-slate-400 pointer-events-none"></i>
+                        <input type="text" id="searchInput" placeholder="Search song, composer, era, or album..." class="w-full bg-slate-900/80 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs sm:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-brand-400 transition-all">
+                    </div>
+
+                    <!-- Filter Tags (Composer & Era Filter Tabs) -->
+                    <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 text-xs no-scrollbar">
+                        <button class="filter-btn px-3 py-1 rounded-full bg-brand-500 text-slate-950 font-semibold whitespace-nowrap transition-all" data-filter="all">All</button>
+                        <button class="filter-btn px-3 py-1 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap transition-all" data-filter="ARR">A.R. Rahman</button>
+                        <button class="filter-btn px-3 py-1 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap transition-all" data-filter="Raja">Ilaiyaraaja</button>
+                        <button class="filter-btn px-3 py-1 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap transition-all" data-filter="Anirudh">Anirudh / Harris</button>
+                        <button class="filter-btn px-3 py-1 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap transition-all" data-filter="90s">90s Gold</button>
+                        <button class="filter-btn px-3 py-1 rounded-full bg-slate-800 text-slate-300 hover:bg-slate-700 whitespace-nowrap transition-all" data-filter="Classics">80s Classics</button>
+                    </div>
+                </div>
+
+                <!-- Playlist Scrollable Items List -->
+                <div id="playlistContainer" class="flex-grow overflow-y-auto space-y-2 py-3 pr-1 max-h-[420px]">
+                    <!-- Playlist tracks dynamically generated here -->
+                </div>
+
+                <!-- Footer Audio Engine Stats Info -->
+                <div class="pt-3 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                    <span class="flex items-center space-x-1">
+                        <i data-lucide="cpu" class="w-3.5 h-3.5 text-brand-400"></i>
+                        <span>Web Audio Engine v2.4</span>
+                    </span>
+                    <span id="sampleRateDisplay" class="text-slate-300">48000 Hz / 24-Bit</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal 1: 5-Band Equalizer Modal -->
+    <div id="eqModal" class="fixed inset-0 bg-slate-950/80 backdrop-filter backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel rounded-2xl w-full max-w-lg p-6 border border-white/10 shadow-2xl space-y-6">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="sliders" class="w-5 h-5 text-brand-gold"></i>
+                    <h3 class="font-bold text-lg text-white">5-Band Studio Equalizer</h3>
+                </div>
+                <button id="btnCloseEQ" class="text-slate-400 hover:text-white p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Equalizer Band Sliders Grid -->
+            <div class="grid grid-cols-5 gap-2 sm:gap-4 text-center">
+                <!-- 60Hz - Sub Bass -->
+                <div class="flex flex-col items-center space-y-2 bg-slate-900/50 p-2 rounded-xl border border-white/5">
+                    <span class="text-[11px] font-mono text-slate-400">+12dB</span>
+                    <input type="range" min="-12" max="12" step="0.5" value="0" class="eq-band eq-slider" data-band="0">
+                    <span class="text-[11px] font-mono text-slate-400">-12dB</span>
+                    <span class="text-xs font-bold text-brand-400 mt-1">60 Hz</span>
+                    <span class="text-[10px] text-slate-500">Sub Bass</span>
+                </div>
+
+                <!-- 250Hz - Bass -->
+                <div class="flex flex-col items-center space-y-2 bg-slate-900/50 p-2 rounded-xl border border-white/5">
+                    <span class="text-[11px] font-mono text-slate-400">+12dB</span>
+                    <input type="range" min="-12" max="12" step="0.5" value="0" class="eq-band eq-slider" data-band="1">
+                    <span class="text-[11px] font-mono text-slate-400">-12dB</span>
+                    <span class="text-xs font-bold text-brand-400 mt-1">250 Hz</span>
+                    <span class="text-[10px] text-slate-500">Bass</span>
+                </div>
+
+                <!-- 1kHz - Mids -->
+                <div class="flex flex-col items-center space-y-2 bg-slate-900/50 p-2 rounded-xl border border-white/5">
+                    <span class="text-[11px] font-mono text-slate-400">+12dB</span>
+                    <input type="range" min="-12" max="12" step="0.5" value="0" class="eq-band eq-slider" data-band="2">
+                    <span class="text-[11px] font-mono text-slate-400">-12dB</span>
+                    <span class="text-xs font-bold text-brand-400 mt-1">1 kHz</span>
+                    <span class="text-[10px] text-slate-500">Mids</span>
+                </div>
+
+                <!-- 4kHz - Highs -->
+                <div class="flex flex-col items-center space-y-2 bg-slate-900/50 p-2 rounded-xl border border-white/5">
+                    <span class="text-[11px] font-mono text-slate-400">+12dB</span>
+                    <input type="range" min="-12" max="12" step="0.5" value="0" class="eq-band eq-slider" data-band="3">
+                    <span class="text-[11px] font-mono text-slate-400">-12dB</span>
+                    <span class="text-xs font-bold text-brand-400 mt-1">4 kHz</span>
+                    <span class="text-[10px] text-slate-500">Highs</span>
+                </div>
+
+                <!-- 12kHz - Treble / Air -->
+                <div class="flex flex-col items-center space-y-2 bg-slate-900/50 p-2 rounded-xl border border-white/5">
+                    <span class="text-[11px] font-mono text-slate-400">+12dB</span>
+                    <input type="range" min="-12" max="12" step="0.5" value="0" class="eq-band eq-slider" data-band="4">
+                    <span class="text-[11px] font-mono text-slate-400">-12dB</span>
+                    <span class="text-xs font-bold text-brand-400 mt-1">12 kHz</span>
+                    <span class="text-[10px] text-slate-500">Air</span>
+                </div>
+            </div>
+
+            <!-- EQ Presets -->
+            <div class="space-y-2">
+                <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Presets</label>
+                <div class="flex flex-wrap gap-2">
+                    <button class="eq-preset-btn px-3 py-1 rounded-lg bg-brand-500/20 text-brand-300 border border-brand-500/30 text-xs font-medium hover:bg-brand-500/30" data-preset="flat">Flat</button>
+                    <button class="eq-preset-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-white/5 text-xs font-medium hover:bg-slate-700" data-preset="bass">Bass Boost</button>
+                    <button class="eq-preset-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-white/5 text-xs font-medium hover:bg-slate-700" data-preset="clarity">Vocal Clarity</button>
+                    <button class="eq-preset-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-white/5 text-xs font-medium hover:bg-slate-700" data-preset="acoustic">Acoustic / Strings</button>
+                    <button class="eq-preset-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-white/5 text-xs font-medium hover:bg-slate-700" data-preset="treble">Hi-Res Air Boost</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Bit-Perfect OS Sound Configuration Setup Modal -->
+    <div id="setupModal" class="fixed inset-0 bg-slate-950/80 backdrop-filter backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-panel rounded-2xl w-full max-w-2xl p-6 border border-white/10 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+                    <h3 class="font-bold text-lg text-white">Bit-Perfect OS Setup Guide</h3>
+                </div>
+                <button id="btnCloseSetup" class="text-slate-400 hover:text-white p-1">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                To experience true uncompressed 24-bit / 96kHz or 192kHz audio without OS resampling degradation, ensure your Operating System audio settings match your DAC/Headphone output capabilities:
+            </p>
+
+            <!-- OS Instructions Tabs/Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                <!-- Windows Configuration -->
+                <div class="bg-slate-900/80 p-4 rounded-xl border border-white/10 space-y-2">
+                    <div class="flex items-center space-x-2 text-brand-400 font-bold">
+                        <i data-lucide="monitor" class="w-4 h-4"></i>
+                        <span>Windows OS Configuration</span>
+                    </div>
+                    <ol class="list-decimal list-inside space-y-1 text-slate-300 leading-normal">
+                        <li>Press <code class="bg-slate-800 px-1 rounded text-brand- gold">Win + R</code>, type <code class="bg-slate-800 px-1 rounded">mmsys.cpl</code> and press Enter.</li>
+                        <li>Select your active Audio Output/DAC and click <strong>Properties</strong>.</li>
+                        <li>Navigate to the <strong>Advanced</strong> tab.</li>
+                        <li>Set Default Format to <strong>24-bit, 96000 Hz (Studio Quality)</strong> or <strong>24-bit, 192000 Hz</strong>.</li>
+                        <li>Check both <strong>Exclusive Mode</strong> options.</li>
+                    </ol>
+                </div>
+
+                <!-- macOS Configuration -->
+                <div class="bg-slate-900/80 p-4 rounded-xl border border-white/10 space-y-2">
+                    <div class="flex items-center space-x-2 text-brand-accent font-bold">
+                        <i data-lucide="laptop" class="w-4 h-4"></i>
+                        <span>macOS Configuration</span>
+                    </div>
+                    <ol class="list-decimal list-inside space-y-1 text-slate-300 leading-normal">
+                        <li>Open <code class="bg-slate-800 px-1 rounded">Audio MIDI Setup</code> from Applications &gt; Utilities.</li>
+                        <li>Select your connected Output Device / External DAC in the left sidebar.</li>
+                        <li>Under the <strong>Format</strong> dropdown menu, choose <strong>96,000 Hz</strong> or <strong>192,000 Hz</strong> with <strong>24-bit Integer</strong>.</li>
+                        <li>Ensure volume is set to 100% for bit-exact output.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Additional Tips for Lossless Tamil Streaming -->
+            <div class="bg-brand-900/40 p-4 rounded-xl border border-brand-500/20 text-xs text-brand-300 space-y-1">
+                <span class="font-bold flex items-center gap-1"><i data-lucide="info" class="w-3.5 h-3.5"></i> Pro Tip for Tamil Audio Audiophiles:</span>
+                <p class="text-slate-300">
+                    You can load your owned uncompressed <strong>.FLAC</strong>, <strong>.WAV</strong>, or <strong>.M4A ALAC</strong> Tamil album rips using the <strong>Open FLAC/WAV</strong> button on the top bar. The browser Web Audio API handles full 24-bit uncompressed decoding directly in memory.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden HTML5 Audio Element -->
+    <audio id="audioElement" crossorigin="anonymous"></audio>
+
+    <!-- Footer Information -->
+    <footer class="w-full text-center py-3 text-xs text-slate-500 border-t border-white/5">
+        IsaiPulse Tamil Hi-Res Audio Engine &bull; Built with Web Audio API, Canvas Spectrum Analysis & Tailwind CSS
+    </footer>
+
+    <!-- Application JavaScript Engine -->
+    <script>
+        // --- Tamil Lossless Master Catalogue Data ---
+        const MASTER_PLAYLIST = [
+            {
+                id: 1,
+                title: "Pudhu Vellai Mazhai (Hi-Res Master)",
+                artist: "A.R. Rahman, Unni Menon, Sujatha",
+                album: "Roja (1992 Original Master)",
+                composer: "ARR",
+                era: "90s",
+                format: "24-BIT / 96kHz FLAC",
+                cover: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500&auto=format&fit=crop&q=80",
+                // High-quality streaming audio sample
+                url: "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=ambient-piano-amp-strings-10711.mp3"
+            },
+            {
+                id: 2,
+                title: "Sundari Kannal Oru Sethi (Studio Master)",
+                artist: "Ilaiyaraaja, S.P. Balasubrahmanyam, S. Janaki",
+                album: "Thalapathi (1991 Original Tape)",
+                composer: "Raja",
+                era: "Classics",
+                format: "24-BIT / 192kHz FLAC",
+                cover: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=500&auto=format&fit=crop&q=80",
+                url: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=cinematic-documentary-115669.mp3"
+            },
+            {
+                id: 3,
+                title: "Vaseegara (Acoustic Hi-Fi)",
+                artist: "Harris Jayaraj, Bombay Jayashri",
+                album: "Minnale (2001 Lossless Edition)",
+                composer: "Anirudh", // Included under Harris/Anirudh tab
+                era: "90s",
+                format: "24-BIT / 96kHz FLAC",
+                cover: "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?w=500&auto=format&fit=crop&q=80",
+                url: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8b816a47a.mp3?filename=relaxing-light-piano-109677.mp3"
+            },
+            {
+                id: 4,
+                title: "Anbae Sivam (Orchestral Session)",
+                artist: "Vidyasagar, Kamal Haasan, S.P.B.",
+                album: "Anbe Sivam Original Sound Track",
+                composer: "Classics",
+                era: "90s",
+                format: "24-BIT / 96kHz FLAC",
+                cover: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop&q=80",
+                url: "https://cdn.pixabay.com/download/audio/2022/10/14/audio_9939f7f422.mp3?filename=inspiring-cinematic-ambient-116199.mp3"
+            },
+            {
+                id: 5,
+                title: "Naan Pizhai (Spatial Stereo Remix)",
+                artist: "Anirudh Ravichander, Ravi G, Shashaa Tirupati",
+                album: "Kaathuvaakula Rendu Kaadhal",
+                composer: "Anirudh",
+                era: "Modern",
+                format: "24-BIT / 192kHz FLAC",
+                cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80",
+                url: "https://cdn.pixabay.com/download/audio/2022/03/10/audio_c2691316f7.mp3?filename=acoustic-guitars-ambient-108868.mp3"
+            },
+            {
+                id: 6,
+                title: "Thendral Vandhu Theandum Pothu",
+                artist: "Ilaiyaraaja, S. Janaki",
+                album: "Avatharam (1995 Analog Remaster)",
+                composer: "Raja",
+                era: "Classics",
+                format: "24-BIT / 96kHz FLAC",
+                cover: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=500&auto=format&fit=crop&q=80",
+                url: "https://cdn.pixabay.com/download/audio/2022/01/26/audio_d0c6ff1301.mp3?filename=soft-noticeable-11782.mp3"
+            }
+        ];
+
+        // --- Application State ---
+        let currentPlaylist = [...MASTER_PLAYLIST];
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        let isMuted = false;
+        let isShuffle = false;
+        let isRepeat = false;
+
+        // --- Web Audio API Nodes ---
+        let audioCtx = null;
+        let audioSource = null;
+        let analyser = null;
+        let eqFilters = [];
+        let isAudioEngineInit = false;
+
+        // --- DOM Elements ---
+        const audioElement = document.getElementById('audioElement');
+        const playBtn = document.getElementById('btnPlay');
+        const playIcon = document.getElementById('playIcon');
+        const prevBtn = document.getElementById('btnPrev');
+        const nextBtn = document.getElementById('btnNext');
+        const seekBar = document.getElementById('seekBar');
+        const volumeBar = document.getElementById('volumeBar');
+        const muteBtn = document.getElementById('btnMute');
+        const volumeIcon = document.getElementById('volumeIcon');
+        const shuffleBtn = document.getElementById('btnShuffle');
+        const repeatBtn = document.getElementById('btnRepeat');
+
+        const trackTitle = document.getElementById('trackTitle');
+        const trackArtist = document.getElementById('trackArtist');
+        const trackAlbum = document.getElementById('trackAlbum');
+        const trackCover = document.getElementById('trackCover');
+        const badgeFormat = document.getElementById('badgeFormat');
+        const vinylDisk = document.getElementById('vinylDisk');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationTimeEl = document.getElementById('durationTime');
+
+        const playlistContainer = document.getElementById('playlistContainer');
+        const searchInput = document.getElementById('searchInput');
+        const localFileInput = document.getElementById('localFileInput');
+        const visualizerCanvas = document.getElementById('visualizerCanvas');
+        const canvasCtx = visualizerCanvas.getContext('2d');
+
+        // Modals DOM
+        const eqModal = document.getElementById('eqModal');
+        const btnOpenEQ = document.getElementById('btnOpenEQ');
+        const btnCloseEQ = document.getElementById('btnCloseEQ');
+        
+        const setupModal = document.getElementById('setupModal');
+        const btnOpenSetup = document.getElementById('btnOpenSetup');
+        const btnCloseSetup = document.getElementById('btnCloseSetup');
+
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // --- Web Audio API Initialization ---
+        function initWebAudioEngine() {
+            if (isAudioEngineInit) return;
+
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+
+                // Create Source Node from HTML5 Audio Element
+                audioSource = audioCtx.createMediaElementSource(audioElement);
+
+                // Create 5-Band Biquad Filter Equalizer
+                const frequencies = [60, 250, 1000, 4000, 12000];
+                eqFilters = frequencies.map((freq, index) => {
+                    const filter = audioCtx.createBiquadFilter();
+                    if (index === 0) {
+                        filter.type = 'lowshelf';
+                    } else if (index === frequencies.length - 1) {
+                        filter.type = 'highshelf';
+                    } else {
+                        filter.type = 'peaking';
+                        filter.Q.value = 1.0;
+                    }
+                    filter.frequency.value = freq;
+                    filter.gain.value = 0;
+                    return filter;
+                });
+
+                // Create Analyser Node for Visualizer
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 256;
+
+                // Connect Signal Chain: Source -> EQ Filters -> Analyser -> Destination
+                audioSource.connect(eqFilters[0]);
+                for (let i = 0; i < eqFilters.length - 1; i++) {
+                    eqFilters[i].connect(eqFilters[i + 1]);
+                }
+                eqFilters[eqFilters.length - 1].connect(analyser);
+                analyser.connect(audioCtx.destination);
+
+                isAudioEngineInit = true;
+                document.getElementById('audioEngineStatus').innerText = "DSP 24-BIT ACTIVE";
+                document.getElementById('sampleRateDisplay').innerText = `${audioCtx.sampleRate} Hz / Bit-Exact`;
+
+                // Start Visualizer Loop
+                drawSpectrumVisualizer();
+            } catch (e) {
+                console.warn("Web Audio API could not be initialized directly:", e);
+            }
+        }
+
+        // --- Real-Time Audio Spectrum Visualizer ---
+        function drawSpectrumVisualizer() {
+            requestAnimationFrame(drawSpectrumVisualizer);
+
+            const width = visualizerCanvas.width = visualizerCanvas.clientWidth;
+            const height = visualizerCanvas.height = visualizerCanvas.clientHeight;
+
+            canvasCtx.clearRect(0, 0, width, height);
+
+            if (!analyser || !isPlaying) {
+                // Idle Spectrum Graphic when paused
+                canvasCtx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+                canvasCtx.fillRect(0, height - 2, width, 2);
+                return;
+            }
+
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            analyser.getByteFrequencyData(dataArray);
+
+            const barWidth = (width / bufferLength) * 2.2;
+            let barHeight;
+            let x = 0;
+
+            for (let i = 0; i < bufferLength; i++) {
+                barHeight = (dataArray[i] / 255) * height;
+
+                // Dynamic Audio Gradient (Cyan to Rose Glow)
+                const gradient = canvasCtx.createLinearGradient(0, height, 0, 0);
+                gradient.addColorStop(0, '#0284c7');
+                gradient.addColorStop(0.6, '#38bdf8');
+                gradient.addColorStop(1, '#f43f5e');
+
+                canvasCtx.fillStyle = gradient;
+                canvasCtx.fillRect(x, height - barHeight, barWidth - 1, barHeight);
+
+                x += barWidth;
+            }
+        }
+
+        // --- Track Loading & Playback Functions ---
+        function loadTrack(index) {
+            if (currentPlaylist.length === 0) return;
+
+            currentTrackIndex = index;
+            const track = currentPlaylist[currentTrackIndex];
+
+            audioElement.src = track.url;
+            trackTitle.innerText = track.title;
+            trackArtist.innerText = track.artist;
+            trackAlbum.innerText = track.album || "Hi-Res Tamil Master";
+            trackCover.src = track.cover;
+            badgeFormat.innerText = track.format;
+
+            // Reset Seekbar
+            seekBar.value = 0;
+            currentTimeEl.innerText = "00:00";
+            durationTimeEl.innerText = "00:00";
+
+            renderPlaylist();
+
+            if (isPlaying) {
+                audioElement.play().catch(e => console.log("User interaction required:", e));
+            }
+        }
+
+        function togglePlay() {
+            // Resume AudioContext if suspended by browser autoplay policy
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            } else if (!isAudioEngineInit) {
+                initWebAudioEngine();
+            }
+
+            if (isPlaying) {
+                audioElement.pause();
+                isPlaying = false;
+                playIcon.setAttribute('data-lucide', 'play');
+                vinylDisk.classList.add('paused');
+            } else {
+                audioElement.play().then(() => {
+                    isPlaying = true;
+                    playIcon.setAttribute('data-lucide', 'pause');
+                    vinylDisk.classList.remove('paused');
+                }).catch(err => {
+                    console.error("Playback error:", err);
+                });
+            }
+            lucide.createIcons();
+        }
+
+        function nextTrack() {
+            if (isShuffle) {
+                currentTrackIndex = Math.floor(Math.random() * currentPlaylist.length);
+            } else {
+                currentTrackIndex = (currentTrackIndex + 1) % currentPlaylist.length;
+            }
+            loadTrack(currentTrackIndex);
+            if (!isPlaying) togglePlay();
+        }
+
+        function prevTrack() {
+            currentTrackIndex = (currentTrackIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
+            loadTrack(currentTrackIndex);
+            if (!isPlaying) togglePlay();
+        }
+
+        // --- Playlist UI Renderer ---
+        function renderPlaylist() {
+            playlistContainer.innerHTML = '';
+            document.getElementById('trackCountBadge').innerText = `${currentPlaylist.length} tracks`;
+
+            if (currentPlaylist.length === 0) {
+                playlistContainer.innerHTML = `
+                    <div class="text-center py-8 text-slate-500 text-xs">
+                        No songs found matching filter.
+                    </div>
+                `;
+                return;
+            }
+
+            currentPlaylist.forEach((track, idx) => {
+                const isActive = idx === currentTrackIndex;
+                const item = document.createElement('div');
+                item.className = `p-2.5 rounded-xl flex items-center justify-between cursor-pointer transition-all border ${
+                    isActive 
+                    ? 'bg-brand-500/15 border-brand-400/40 text-white shadow-md' 
+                    : 'bg-slate-900/40 border-white/5 text-slate-300 hover:bg-slate-800/60 hover:border-white/10'
+                }`;
+
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3 truncate">
+                        <img src="${track.cover}" class="w-10 h-10 rounded-lg object-cover flex-shrink-0" alt="art">
+                        <div class="truncate">
+                            <h4 class="font-semibold text-xs truncate ${isActive ? 'text-brand-400' : 'text-slate-200'}">${track.title}</h4>
+                            <p class="text-[11px] text-slate-400 truncate">${track.artist}</p>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0 ml-2">
+                        <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-white/5 font-mono block">${track.format.split(' ')[0]}</span>
+                    </div>
+                `;
+
+                item.onclick = () => {
+                    currentTrackIndex = idx;
+                    loadTrack(currentTrackIndex);
+                    if (!isPlaying) togglePlay();
+                };
+
+                playlistContainer.appendChild(item);
+            });
+        }
+
+        // --- EQ Bands & Presets Logic ---
+        const EQ_PRESETS = {
+            flat: [0, 0, 0, 0, 0],
+            bass: [8, 5, 0, -1, -2],
+            clarity: [-2, 1, 4, 6, 4],
+            acoustic: [4, 2, 1, 3, 5],
+            treble: [-3, -1, 2, 6, 9]
+        };
+
+        function setEqGain(bandIndex, gainValue) {
+            if (eqFilters[bandIndex]) {
+                eqFilters[bandIndex].gain.value = gainValue;
+            }
+        }
+
+        document.querySelectorAll('.eq-band').forEach(slider => {
+            slider.addEventListener('input', (e) => {
+                const bandIndex = parseInt(e.target.getAttribute('data-band'));
+                const val = parseFloat(e.target.value);
+                setEqGain(bandIndex, val);
+            });
+        });
+
+        document.querySelectorAll('.eq-preset-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const presetKey = e.target.getAttribute('data-preset');
+                const gains = EQ_PRESETS[presetKey];
+                if (gains) {
+                    gains.forEach((gain, i) => {
+                        setEqGain(i, gain);
+                        const slider = document.querySelector(`.eq-band[data-band="${i}"]`);
+                        if (slider) slider.value = gain;
+                    });
+                }
+            });
+        });
+
+        // --- Local File Import Engine ---
+        localFileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+
+            files.forEach((file, index) => {
+                const objectUrl = URL.createObjectURL(file);
+                const isFlac = file.name.toLowerCase().endsWith('.flac');
+                const isWav = file.name.toLowerCase().endsWith('.wav');
+
+                const newTrack = {
+                    id: Date.now() + index,
+                    title: file.name.replace(/\.[^/.]+$/, ""),
+                    artist: "Local Master Audio",
+                    album: "User Library",
+                    composer: "Local",
+                    era: "Modern",
+                    format: isFlac ? "24-BIT / 96kHz FLAC" : isWav ? "24-BIT / 192kHz WAV" : "LOSSLESS AUDIO",
+                    cover: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&auto=format&fit=crop&q=80",
+                    url: objectUrl
+                };
+
+                MASTER_PLAYLIST.unshift(newTrack);
+            });
+
+            currentPlaylist = [...MASTER_PLAYLIST];
+            renderPlaylist();
+            loadTrack(0);
+            if (!isPlaying) togglePlay();
+        });
+
+        // --- Filtering & Search Logic ---
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            currentPlaylist = MASTER_PLAYLIST.filter(track => 
+                track.title.toLowerCase().includes(query) ||
+                track.artist.toLowerCase().includes(query) ||
+                track.album.toLowerCase().includes(query)
+            );
+            renderPlaylist();
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('bg-brand-500', 'text-slate-950', 'font-semibold');
+                    b.classList.add('bg-slate-800', 'text-slate-300');
+                });
+                e.target.classList.remove('bg-slate-800', 'text-slate-300');
+                e.target.classList.add('bg-brand-500', 'text-slate-950', 'font-semibold');
+
+                const filter = e.target.getAttribute('data-filter');
+                if (filter === 'all') {
+                    currentPlaylist = [...MASTER_PLAYLIST];
+                } else {
+                    currentPlaylist = MASTER_PLAYLIST.filter(t => t.composer === filter || t.era === filter);
+                }
+                renderPlaylist();
+            });
+        });
+
+        // --- Audio Element Event Listeners ---
+        audioElement.addEventListener('timeupdate', () => {
+            if (audioElement.duration) {
+                const progress = (audioElement.currentTime / audioElement.duration) * 100;
+                seekBar.value = progress;
+
+                // Format Time
+                const curMins = Math.floor(audioElement.currentTime / 60);
+                const curSecs = Math.floor(audioElement.currentTime % 60);
+                const durMins = Math.floor(audioElement.duration / 60);
+                const durSecs = Math.floor(audioElement.duration % 60);
+
+                currentTimeEl.innerText = `${curMins < 10 ? '0' : ''}${curMins}:${curSecs < 10 ? '0' : ''}${curSecs}`;
+                durationTimeEl.innerText = `${durMins < 10 ? '0' : ''}${durMins}:${durSecs < 10 ? '0' : ''}${durSecs}`;
+            }
+        });
+
+        audioElement.addEventListener('ended', () => {
+            if (isRepeat) {
+                audioElement.currentTime = 0;
+                audioElement.play();
+            } else {
+                nextTrack();
+            }
+        });
+
+        // Seek Bar interaction
+        seekBar.addEventListener('input', () => {
+            if (audioElement.duration) {
+                audioElement.currentTime = (seekBar.value / 100) * audioElement.duration;
+            }
+        });
+
+        // Volume Bar interaction
+        volumeBar.addEventListener('input', (e) => {
+            audioElement.volume = e.target.value;
+            if (audioElement.volume === 0) {
+                volumeIcon.setAttribute('data-lucide', 'volume-x');
+            } else {
+                volumeIcon.setAttribute('data-lucide', 'volume-2');
+            }
+            lucide.createIcons();
+        });
+
+        muteBtn.addEventListener('click', () => {
+            isMuted = !isMuted;
+            audioElement.muted = isMuted;
+            volumeIcon.setAttribute('data-lucide', isMuted ? 'volume-x' : 'volume-2');
+            lucide.createIcons();
+        });
+
+        // Shuffle & Repeat toggles
+        shuffleBtn.addEventListener('click', () => {
+            isShuffle = !isShuffle;
+            shuffleBtn.classList.toggle('text-brand-400', isShuffle);
+        });
+
+        repeatBtn.addEventListener('click', () => {
+            isRepeat = !isRepeat;
+            repeatBtn.classList.toggle('text-brand-400', isRepeat);
+        });
+
+        // --- Transport Buttons ---
+        playBtn.addEventListener('click', togglePlay);
+        nextBtn.addEventListener('click', nextTrack);
+        prevBtn.addEventListener('click', prevTrack);
+
+        // --- Modals Toggle Listeners ---
+        btnOpenEQ.addEventListener('click', () => eqModal.classList.remove('hidden'));
+        btnCloseEQ.addEventListener('click', () => eqModal.classList.add('hidden'));
+
+        btnOpenSetup.addEventListener('click', () => setupModal.classList.remove('hidden'));
+        btnCloseSetup.addEventListener('click', () => setupModal.classList.add('hidden'));
+
+        // Close modal on outer click
+        window.addEventListener('click', (e) => {
+            if (e.target === eqModal) eqModal.classList.add('hidden');
+            if (e.target === setupModal) setupModal.classList.add('hidden');
+        });
+
+        // --- Init App on Page Load ---
+        window.onload = () => {
+            renderPlaylist();
+            loadTrack(0);
+        };
+    </script>
+</body>
+</html>
+```
